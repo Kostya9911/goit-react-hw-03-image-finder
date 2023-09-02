@@ -1,18 +1,20 @@
+import css from './Searchbar.module.css';
+
 export const Searchbar = ({ onSubmit }) => {
   return (
-    <header class="searchbar">
-      <form class="form">
-        <button type="submit" class="button">
-          <span class="button-label">Search</span>
-        </button>
-
+    <header className={css.Searchbar}>
+      <form onSubmit={onSubmit} className={css.SearchForm}>
         <input
-          class="input"
+          className={css.SearchForm_input}
           type="text"
-          autocomplete="off"
-          autofocus
+          name="query"
+          autoComplete="off"
+          autoFocus
           placeholder="Search images and photos"
         />
+        <button type="submit" className={css.SearchForm_button}>
+          <span className={css.SearchForm_button_label}>Search</span>
+        </button>
       </form>
     </header>
   );
