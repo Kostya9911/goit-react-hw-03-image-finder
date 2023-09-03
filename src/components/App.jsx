@@ -1,13 +1,12 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
+
 import { Modal } from './Modal/Modal';
 import { Searchbar } from './Searchbar/Searchbar';
-// import {Loader} from './Loader/Loader';
+import { Loader } from './Loader/Loader';
 import { Button } from './Button/Button';
 import { ImageGallery } from './ImageGallery/ImageGallery';
 
 import { fetchImages } from 'api';
-
-import { Audio } from 'react-loader-spinner';
 
 import css from './App.module.css';
 
@@ -25,12 +24,12 @@ export default class App extends Component {
 
   handleOpenModal = id => {
     this.setState({ openModal: true });
-    // console.log(id);
     this.setState({
-      largeImageURL: this.state.images.filter(image => image.id === id),
+      largeImageURL: this.state.images.filter(image => image.id === id)[0],
     });
-
-    // const best = images.filter(image => image.id === id)
+  };
+  handleCloseModal = () => {
+    this.setState({ openModal: false });
   };
 
   handleSubmit = evt => {
@@ -82,30 +81,25 @@ export default class App extends Component {
   render() {
     const { images, loading, error, loadMore, openModal, largeImageURL } =
       this.state;
-    // console.log(largeImageURL);
+
     return (
       <div className={css.App}>
         <Searchbar onSubmit={this.handleSubmit}></Searchbar>
-        {loading && (
-          <Audio
-            height="80"
-            width="80"
-            radius="9"
-            color="green"
-            ariaLabel="three-dots-loading"
-            wrapperStyle
-            wrapperClass
-          />
-        )}
+        {loading && <Loader />}
         {error && !loading && <div>!!!ERROR!!!</div>}
+
         {images.length > 0 && (
           <ImageGallery
             openModal={this.handleOpenModal}
             images={images}
           ></ImageGallery>
         )}
-        {openModal && <Modal largeImageURL={{ ...largeImageURL[0] }}></Modal>}
-
+        {openModal && (
+          <Modal
+            largeImageURL={{ ...largeImageURL }}
+            closeModal={this.handleCloseModal}
+          ></Modal>
+        )}
         {loadMore && <Button loadMore={this.handleLoadMore}>Load more</Button>}
       </div>
     );

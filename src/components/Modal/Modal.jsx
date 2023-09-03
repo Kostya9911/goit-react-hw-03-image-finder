@@ -1,12 +1,18 @@
+import PropTypes from 'prop-types';
+
 import css from './Modal.module.css';
 
-export const Modal = ({ largeImageURL }) => {
-  console.log(largeImageURL);
+export const Modal = ({ largeImageURL, closeModal }) => {
   return (
-    <div className={css.Overlay}>
+    <div onClick={closeModal} className={css.Overlay}>
       <div className={css.Modal}>
         <img src={largeImageURL.largeImageURL} alt="" />
       </div>
     </div>
   );
+};
+
+Modal.propTypes = {
+  closeModal: PropTypes.func,
+  largeImageURL: PropTypes.object,
 };
