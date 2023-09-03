@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-// import {Modal} from './Modal/Modal';
+import { Modal } from './Modal/Modal';
 import { Searchbar } from './Searchbar/Searchbar';
 // import {Loader} from './Loader/Loader';
 import { Button } from './Button/Button';
@@ -19,12 +19,27 @@ export default class App extends Component {
     loading: false,
     error: false,
     loadMore: false,
+    openModal: false,
+    largeImageURL: '',
+  };
+
+  handleOpenModal = id => {
+    this.setState({ openModal: true });
+    // console.log(id);
+    this.setState({
+      largeImageURL: this.state.images.filter(image => image.id === id),
+    });
+
+    // const best = images.filter(image => image.id === id)
   };
 
   handleSubmit = evt => {
     evt.preventDefault();
+    if (evt.target.elements.query.value.length === 0) {
+      return;
+    }
     this.setState({
-      query: evt.target.elements.query.value,
+      query: `${Date.now()}/${evt.target.elements.query.value.trim()}`,
       images: [],
       page: 1,
     });
@@ -35,20 +50,6 @@ export default class App extends Component {
     this.setState(prevState => ({ page: prevState.page + 1 }));
   };
 
-  // async componentDidMount() {
-  //   try {
-  //     this.setState({ loading: true, error: false });
-  //     console.log(this.state.query);
-  //     const arrayImages = await fetchImages(this.state.query);
-  //     this.setState({ images: arrayImages.hits });
-  //     // console.log(arrayImages);
-  //   } catch (error) {
-  //     this.setState({ error: true });
-  //   } finally {
-  //     this.setState({ loading: false });
-  //   }
-  // }
-
   async componentDidUpdate(prevProps, prevState) {
     if (
       this.state.page !== prevState.page ||
@@ -57,11 +58,14 @@ export default class App extends Component {
       try {
         this.setState({ loading: true, error: false });
 
+        if (this.state.query.length === 0) {
+          return;
+        }
+
         const { hits, totalHits } = await fetchImages(
-          this.state.query,
+          this.state.query.split('/')[1],
           this.state.page
         );
-        // const { hits, totalHits } = arrayImages;
 
         this.setState(prev => ({
           images: [...prev.images, ...hits],
@@ -76,8 +80,9 @@ export default class App extends Component {
   }
 
   render() {
-    // console.log(this.state);
-    const { images, loading, error, loadMore } = this.state;
+    const { images, loading, error, loadMore, openModal, largeImageURL } =
+      this.state;
+    // console.log(largeImageURL);
     return (
       <div className={css.App}>
         <Searchbar onSubmit={this.handleSubmit}></Searchbar>
@@ -93,8 +98,13 @@ export default class App extends Component {
           />
         )}
         {error && !loading && <div>!!!ERROR!!!</div>}
-
-        {images.length > 0 && <ImageGallery images={images}></ImageGallery>}
+        {images.length > 0 && (
+          <ImageGallery
+            openModal={this.handleOpenModal}
+            images={images}
+          ></ImageGallery>
+        )}
+        {openModal && <Modal largeImageURL={{ ...largeImageURL[0] }}></Modal>}
 
         {loadMore && <Button loadMore={this.handleLoadMore}>Load more</Button>}
       </div>

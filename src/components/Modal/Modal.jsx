@@ -1,10 +1,11 @@
 import css from './Modal.module.css';
 
-export const Modal = () => {
+export const Modal = ({ largeImageURL }) => {
+  console.log(largeImageURL);
   return (
     <div className={css.Overlay}>
       <div className={css.Modal}>
-        <img src="" alt="" />
+        <img src={largeImageURL.largeImageURL} alt="" />
       </div>
     </div>
   );
