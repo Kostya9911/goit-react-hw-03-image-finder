@@ -22,25 +22,17 @@ export default class App extends Component {
     largeImageURL: '',
   };
 
-  handleOpenModal = id => {
-    this.setState({ openModal: true });
-    this.setState({
-      largeImageURL: this.state.images.filter(image => image.id === id)[0],
-    });
-  };
-  handleCloseModal = () => {
-    this.setState({ openModal: false });
-  };
-
   handleSubmit = evt => {
     evt.preventDefault();
     if (evt.target.elements.query.value.length === 0) {
       return;
     }
+
     this.setState({
       query: `${Date.now()}/${evt.target.elements.query.value.trim()}`,
       images: [],
       page: 1,
+      largeImageURL: '',
     });
     evt.target.reset();
   };
@@ -77,6 +69,16 @@ export default class App extends Component {
       }
     }
   }
+
+  handleOpenModal = id => {
+    this.setState({ openModal: true });
+    this.setState({
+      largeImageURL: this.state.images.filter(image => image.id === id)[0],
+    });
+  };
+  handleCloseModal = () => {
+    this.setState({ openModal: false });
+  };
 
   render() {
     const { images, loading, error, loadMore, openModal, largeImageURL } =
