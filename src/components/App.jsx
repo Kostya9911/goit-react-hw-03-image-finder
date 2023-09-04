@@ -5,6 +5,7 @@ import { Searchbar } from './Searchbar/Searchbar';
 import { Loader } from './Loader/Loader';
 import { Button } from './Button/Button';
 import { ImageGallery } from './ImageGallery/ImageGallery';
+// import { Scroll } from './Scroll/Scroll';
 
 import { fetchImages } from 'api';
 
@@ -76,7 +77,7 @@ export default class App extends Component {
       largeImageURL: this.state.images.filter(image => image.id === id)[0],
     });
   };
-  handleCloseModal = () => {
+  handleCloseModal = evt => {
     this.setState({ openModal: false });
   };
 
@@ -96,6 +97,7 @@ export default class App extends Component {
             images={images}
           ></ImageGallery>
         )}
+
         {openModal && (
           <Modal
             largeImageURL={{ ...largeImageURL }}
