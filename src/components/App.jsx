@@ -1,5 +1,7 @@
 import { Component } from 'react';
 
+import toast, { Toaster } from 'react-hot-toast';
+
 import { Modal } from './Modal/Modal';
 import { Searchbar } from './Searchbar/Searchbar';
 import { Loader } from './Loader/Loader';
@@ -25,7 +27,9 @@ export default class App extends Component {
 
   handleSubmit = evt => {
     evt.preventDefault();
-    if (evt.target.elements.query.value.length === 0) {
+    if (evt.target.elements.query.value.trim().length <= 1) {
+      toast.error('Search failed! More characters needed!');
+      evt.target.reset();
       return;
     }
 
@@ -64,7 +68,8 @@ export default class App extends Component {
           loadMore: this.state.page < Math.ceil(totalHits / 12),
         }));
       } catch (error) {
-        this.setState({ error: true });
+        toast.error('ERROR');
+        // this.setState({ error: true });
       } finally {
         this.setState({ loading: false });
       }
@@ -78,18 +83,27 @@ export default class App extends Component {
     });
   };
   handleCloseModal = evt => {
+    // console.log(evt);
     this.setState({ openModal: false });
   };
 
   render() {
-    const { images, loading, error, loadMore, openModal, largeImageURL } =
-      this.state;
+    const {
+      images,
+      loading,
+      // error,
+      loadMore,
+      openModal,
+      largeImageURL,
+    } = this.state;
 
     return (
       <div className={css.App}>
         <Searchbar onSubmit={this.handleSubmit}></Searchbar>
         {loading && <Loader />}
-        {error && !loading && <div>!!!ERROR!!!</div>}
+        {/* {error && !loading && <div>!!!ERROR!!!</div>} */}
+
+        <Toaster position="top-right" reverseOrder={false} />
 
         {images.length > 0 && (
           <ImageGallery

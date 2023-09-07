@@ -5,11 +5,9 @@ import PropTypes from 'prop-types';
 import css from './Modal.module.css';
 
 export class Modal extends Component {
-  // { largeImageURL, closeModal }
-
   pressKeyDown = evt => {
     if (evt.code === 'Escape') {
-      this.props.closeModal();
+      this.props.closeModal(evt);
     }
   };
 
